@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -18,22 +18,67 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final audioPlayer = AudioPlayer();
-
-  // executardaWeb() async {
-  //   String url =
-  //       "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3";
-  //   await audioPlayer.play(UrlSource(url));
-  // }
+  double volume = 0.5;
 
   executar() async {
-    await audioPlayer.play(AssetSource('audios/musica.mp3'), volume: 50.0);
+    await audioPlayer.play(AssetSource('audios/musica.mp3'));
+  }
+
+  pausar() async {
+    await audioPlayer.pause();
+  }
+
+  parar() async {
+    await audioPlayer.stop();
   }
 
   @override
   Widget build(BuildContext context) {
-    // executardaWeb();
-    executar();
-
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.blue,
+        title: Text(
+          "Executando sons",
+        ),
+      ),
+      body: Column(
+        children: [
+          Slider(
+            value: volume,
+            min: 0.0,
+            max: 1.0,
+            onChanged: (novoVolume) {
+              setState(() {
+                volume = novoVolume;
+              });
+              audioPlayer.setVolume(volume);
+            },
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GestureDetector(
+                    onTap: executar,
+                    child: Image.asset('assets/imagens/executar.png')),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GestureDetector(
+                    onTap: pausar,
+                    child: Image.asset('assets/imagens/pausar.png')),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GestureDetector(
+                    onTap: parar,
+                    child: Image.asset('assets/imagens/parar.png')),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
   }
 }
